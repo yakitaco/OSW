@@ -8,6 +8,7 @@ public class StageCtl : MonoBehaviour
 {
 
 	public MapCtl map;
+	public ViewMap vmap;
 	public Sprite[] unitImages;
 	
 	public LineRenderer renderer;
@@ -224,7 +225,7 @@ public class StageCtl : MonoBehaviour
 		
 		Debug.Log("["+ map.MapDist(new Vector2Int (10, 10), new Vector2Int (11, 10)));
 		
-		
+		vmap.initTile();
     }
 
     // Update is called once per frame
@@ -241,8 +242,8 @@ public class StageCtl : MonoBehaviour
     
     		AddUnit("AAA" , new Vector2Int(rt[0].x,rt[0].y), players[0], Unit.Surveillance);
     		
-    		testUnit.addMoveList(rt.Select(pos => new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(pos.x),map.offset_stg2tile_y(pos.y), 0)).x,
-    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(pos.x), map.offset_stg2tile_y(pos.y), 0)).y)).ToList());
+    		testUnit.addMoveList(rt.Select(pos => new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(pos.x),MapCtl.offset_stg2tile_y(pos.y), 0)).x,
+    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(pos.x), MapCtl.offset_stg2tile_y(pos.y), 0)).y)).ToList());
     
 		    // 線の幅
 		    renderer.SetWidth(0.1f, 0.1f);
@@ -250,7 +251,7 @@ public class StageCtl : MonoBehaviour
 		    renderer.SetVertexCount(rt.Count);
 		    // 頂点を設定
 		    for (int i=0;i<rt.Count;i++){
-		    	renderer.SetPosition(i, map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(rt[i].x), map.offset_stg2tile_y(rt[i].y), 0)) + new Vector3(0f, 0f, -1f));
+		    	renderer.SetPosition(i, map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(rt[i].x), MapCtl.offset_stg2tile_y(rt[i].y), 0)) + new Vector3(0f, 0f, -1f));
 		    }
     }
     
@@ -265,7 +266,7 @@ public class StageCtl : MonoBehaviour
         //} else {
         //    unit.transform.GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.0f, 0.75f, 1.0f); //blue
         //}
-        //unit.transform.position = map.GetComponent<Grid>().GetCellCenterWorld( new Vector3Int( map.offset_stg2tile_x(point.x), map.offset_stg2tile_y(point.y), 0 ) ) - new Vector3(0f, 0f, 1f);
+        //unit.transform.position = map.GetComponent<Grid>().GetCellCenterWorld( new Vector3Int( MapCtl.offset_stg2tile_x(point.x), MapCtl.offset_stg2tile_y(point.y), 0 ) ) - new Vector3(0f, 0f, 1f);
         //if (unit.type != uType.Building){
         //	UnitList[player.pnum].Insert(0, unit);  //先頭
         //} else {

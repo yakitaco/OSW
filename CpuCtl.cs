@@ -142,7 +142,7 @@ public class CpuCtl : MonoBehaviour
 	        							var u = units.canLoad(cpuUnitList[i].hopeRideShip);
 		        						if (u != null){
 		        							units.doLoad(u);
-		        							units.LastDest = map.offset_stg2vec(cpuUnitList[i].cpuTgtPos);
+		        							units.LastDest = MapCtl.offset_stg2vec(cpuUnitList[i].cpuTgtPos);
 		        							cpuUnitList[i].cWorkType = CpuWorkType.None;
 		        							cpuUnitList[i].hopeRideShip = null;
 		        						} else {
@@ -229,14 +229,14 @@ public class CpuCtl : MonoBehaviour
 		        		if (units.loadUnits.Count > 0){
 		        			if (units.loadUnits[0].works == WorkType.Loading){
 			        			//搭載ユニットの最終移動先へ
-			        			units.doMove(map.offset_vec2stg(units.loadUnits[0].LastDest));
+			        			units.doMove(MapCtl.offset_vec2stg(units.loadUnits[0].LastDest));
 			        			units.loadUnits[0].works = WorkType.None;
 		        			} else {
 		        				if (map.tileRing(units.pos, 1).Exists(tll => (((map.tileMap[tll.x,tll.y].getGroup() == TileGroup.Ground))))){
 			        				units.doUnload(units.loadUnits[0]);
 			        				cpuUnitList[i].hopeRideShip = null;
 			        			} else {
-				        			units.doMove(map.offset_vec2stg(units.loadUnits[0].LastDest));
+				        			units.doMove(MapCtl.offset_vec2stg(units.loadUnits[0].LastDest));
 			        			}
 		        			}
 		        		/* ユニットが非搭載 */

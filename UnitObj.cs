@@ -295,7 +295,7 @@ public class UnitObj : MonoBehaviour {
         } else {
         	StageCtl.UnitList[newObj.player.pnum].Add(newObj);  //末尾
         }
-    	newObj.transform.position = map.GetComponent<Grid>().GetCellCenterWorld( new Vector3Int( map.offset_stg2tile_x(_pos.x), map.offset_stg2tile_y(_pos.y), 0 ) ) - new Vector3(0f, 0f, 1f);
+    	newObj.transform.position = map.GetComponent<Grid>().GetCellCenterWorld( new Vector3Int( MapCtl.offset_stg2tile_x(_pos.x), MapCtl.offset_stg2tile_y(_pos.y), 0 ) ) - new Vector3(0f, 0f, 1f);
     	return newObj;
     }
     
@@ -442,8 +442,8 @@ public class UnitObj : MonoBehaviour {
 		if (map.MapDist(pos, dst.pos) > 1) return false;
 		Debug.Log (string.Format ("Load!!"));
 	    destList.Clear();
-	    destList.Add(new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(dst.pos.x),map.offset_stg2tile_y(dst.pos.y), 0)).x,
-			    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(dst.pos.x), map.offset_stg2tile_y(dst.pos.y), 0)).y));  //dst.pos);
+	    destList.Add(new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(dst.pos.x),MapCtl.offset_stg2tile_y(dst.pos.y), 0)).x,
+			    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(dst.pos.x), MapCtl.offset_stg2tile_y(dst.pos.y), 0)).y));  //dst.pos);
 		chgWorkType(WorkType.Loading);
 		transform.parent = dst.transform;
 		//dst.chgWorkType(WorkType.Loading);
@@ -463,8 +463,8 @@ public class UnitObj : MonoBehaviour {
 		    	//候補がある場合
 		    	tgtObj.gameObject.SetActive(true);
 		    	tgtObj.destList.Clear();
-		    	tgtObj.destList.Add(new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x((int)dsts?.x),map.offset_stg2tile_y((int)dsts?.y), 0)).x,
-		    								map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x((int)dsts?.x), map.offset_stg2tile_y((int)dsts?.y), 0)).y));
+		    	tgtObj.destList.Add(new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x((int)dsts?.x),MapCtl.offset_stg2tile_y((int)dsts?.y), 0)).x,
+		    								map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x((int)dsts?.x), MapCtl.offset_stg2tile_y((int)dsts?.y), 0)).y));
 		    	tgtObj.transform.parent = null;
 		    	loadUnits.Remove(tgtObj);
 		    	tgtObj.chgWorkType(WorkType.Unloading);
@@ -476,8 +476,8 @@ public class UnitObj : MonoBehaviour {
 		}
 		//if (map.MapDist(pos, dst.pos) > 1) return false;
 	    //destList.Clear();
-	    //destList.Add(new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(dst.pos.x),map.offset_stg2tile_y(dst.pos.y), 0)).x,
-		//	    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(dst.pos.x), map.offset_stg2tile_y(dst.pos.y), 0)).y));  //dst.pos);
+	    //destList.Add(new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(dst.pos.x),MapCtl.offset_stg2tile_y(dst.pos.y), 0)).x,
+		//	    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(dst.pos.x), MapCtl.offset_stg2tile_y(dst.pos.y), 0)).y));  //dst.pos);
 		//chgWorkType(WorkType.Loading);
 		//
 		return true;
@@ -644,7 +644,7 @@ public class UnitObj : MonoBehaviour {
 			}
 				
 			Vector3Int cellPosition = map.GetComponent<Grid>().LocalToCell(transform.position);
-			pos = new Vector2Int(map.offset_tile2stg_x(cellPosition.x), map.offset_tile2stg_y(cellPosition.y));
+			pos = new Vector2Int(MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
 			
 
 			
@@ -750,7 +750,7 @@ public class UnitObj : MonoBehaviour {
 	public void doMove(Vector2Int epos, Vector2Int? _spos = null, List<Vector2Int> Olist = null){
 		if (works != WorkType.Moving) chgWorkType(WorkType.PreMove);
 		var spos = _spos ?? pos;
-		LastDest = map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(epos.x),map.offset_stg2tile_y(epos.y), 0));
+		LastDest = map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(epos.x),MapCtl.offset_stg2tile_y(epos.y), 0));
 		//Debug.Log (string.Format ("doMove: ({0},{1})", spos, epos));
 		
 	    switch (type){
@@ -805,19 +805,19 @@ public class UnitObj : MonoBehaviour {
 
 
 			if (rt?.Count > 0) {
-				var startPos = new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(rt[0].x),map.offset_stg2tile_y(rt[0].y), 0)).x,
-			    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(rt[0].x), map.offset_stg2tile_y(rt[0].y), 0)).y);
+				var startPos = new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(rt[0].x),MapCtl.offset_stg2tile_y(rt[0].y), 0)).x,
+			    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(rt[0].x), MapCtl.offset_stg2tile_y(rt[0].y), 0)).y);
 				rt.RemoveAt(0);
 				if (lock_timer==0){
 					if ((destList.Count==0)||((destList.Last().x == startPos.x)&&(destList.Last().y == startPos.y))){
 				    	if (destDir > ret){
 
-				    		this.addMoveList(rt.Select(pos => new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(pos.x),map.offset_stg2tile_y(pos.y), 0)).x,
-				    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(pos.x), map.offset_stg2tile_y(pos.y), 0)).y)).ToList());
+				    		this.addMoveList(rt.Select(pos => new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(pos.x),MapCtl.offset_stg2tile_y(pos.y), 0)).x,
+				    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(pos.x), MapCtl.offset_stg2tile_y(pos.y), 0)).y)).ToList());
 				    		                                                                   
 							destDir = ret;
 					    	if ( ret > 0 ){
-					    		if (destList?.Count > 0) doMove(map.offset_vec2stg(LastDest), map.offset_vec2stg(destList.Last()));
+					    		if (destList?.Count > 0) doMove(MapCtl.offset_vec2stg(LastDest), MapCtl.offset_vec2stg(destList.Last()));
 					    	}
 				        }
 			        }
@@ -825,12 +825,12 @@ public class UnitObj : MonoBehaviour {
 		        } else {
 					if ((destList.Count==0)||((destList.Last().x != startPos.x)&&(destList.Last().y != startPos.y))){
 						destList.Clear();
-				    	this.addMoveList(rt.Select(pos => new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(pos.x),map.offset_stg2tile_y(pos.y), 0)).x,
-				    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(map.offset_stg2tile_x(pos.x), map.offset_stg2tile_y(pos.y), 0)).y)).ToList());
+				    	this.addMoveList(rt.Select(pos => new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(pos.x),MapCtl.offset_stg2tile_y(pos.y), 0)).x,
+				    		                                                                   map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(pos.x), MapCtl.offset_stg2tile_y(pos.y), 0)).y)).ToList());
 				    	//destList.RemoveAt(0);                                                               
 						destDir = ret;
 					    if ( ret > 0 ){
-					    	if (destList?.Count > 0) doMove(map.offset_vec2stg(LastDest), map.offset_vec2stg(destList.Last()));
+					    	if (destList?.Count > 0) doMove(MapCtl.offset_vec2stg(LastDest), MapCtl.offset_vec2stg(destList.Last()));
 					    }
 			    		lock_timer = 0;
 	    				lock_retry ++;
@@ -869,8 +869,8 @@ public class UnitObj : MonoBehaviour {
     public void OnCollision2D(Collider2D other)
     {
 		List<Vector2Int> Olist = new List<Vector2Int>();
-		Olist.Add(map.offset_vec2stg(destList[1]));
-		doMove(map.offset_vec2stg(LastDest), null, Olist);
+		Olist.Add(MapCtl.offset_vec2stg(destList[1]));
+		doMove(MapCtl.offset_vec2stg(LastDest), null, Olist);
     }
 
 	//接触中
@@ -882,13 +882,13 @@ public class UnitObj : MonoBehaviour {
 				if (lock_retry<3){
 					if (destList?.Count > 1)destList.RemoveAt(0);
 					var mList = map.tileRing(pos,1).Where(c => map.chkMoveObj(c,type)).OrderBy(i => System.Guid.NewGuid()).ToList();//
-					if (mList?.Count > 1)destList.Insert(0, map.offset_stg2vec(mList[0]));
+					if (mList?.Count > 1)destList.Insert(0, MapCtl.offset_stg2vec(mList[0]));
 					//destList.Insert(0, new Vector2(transform.position.x + UnityEngine.Random.Range(-1, 2), transform.position.y + UnityEngine.Random.Range(-1, 2)));
 					lock_timer = 0;
     				lock_retry ++;
 					//List<Vector2Int> Olist = new List<Vector2Int>();
-					//if (destList?.Count > 1) Olist.Add(map.offset_vec2stg(destList[1]));
-					//doMove(map.offset_vec2stg(LastDest), null, Olist);
+					//if (destList?.Count > 1) Olist.Add(MapCtl.offset_vec2stg(destList[1]));
+					//doMove(MapCtl.offset_vec2stg(LastDest), null, Olist);
 					
 				/* 3回リトライしても解決しない場合は行動クリア */
 				} else {

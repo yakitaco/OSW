@@ -1,24 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 using System.Linq;
 using UnityEngine;
 
     // プレイヤー、CPUが見えるマップ
-public class ViewMap : MonoBehaviour
+public class ViewMap
 {
     // ベースとなるマップ
-    MapCtl baseMap;
+    public MapCtl baseMap;
+	public Tilemap vMap;
+	public Tilemap vMask;
+	static TileBase black;
+	static TileBase mask;
     
     [SerializeField]
     public List<TileObj> tileList;  //タイルの一次元リスト
     [SerializeField]
     public TileObj[,] tileMap;      //タイルの2次元配列
 
-    // Start is called before the first frame update
-    void Start()
+    // タイル追加
+    static ViewMap()
     {
-        
+        black = Resources.Load<TileBase>("TileMask/00_Black");
+        mask  = Resources.Load<TileBase>("TileMask/01_Mask");
     }
+    
+    // 初期化
+    public ViewMap(Tilemap _vMap = null, Tilemap _vMask = null)
+    {
+        vMap  = _vMap;
+        vMask = _vMask;
+    }
+    
+    
 
     // Update is called once per frame
     void Update()
@@ -33,6 +48,11 @@ public class ViewMap : MonoBehaviour
 		tileList = new List<TileObj>();
 		//タイル要素定義
 		tileMap = new TileObj[StageCtl.TileLenX, StageCtl.TileLenY];
+		for(int x = 0 ; x < StageCtl.TileLenX ; x++) {
+			for(int y = 0 ; y < StageCtl.TileLenY ; y++) {
+			    vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(x),MapCtl.offset_stg2tile_y(y),0), black );
+			}
+		}
     }
     
     // ユニット移動(move = 移動量, fov = 視野[>0])
@@ -40,9 +60,12 @@ public class ViewMap : MonoBehaviour
         
     }
     
-    // ユニット追加()
+    // ユニット追加(fov:視界)
     public void moveAdd(Vector2Int pos, int fov){
-        
+        List<Vector2Int> vList = tileArea(pos, fov);
+        foreach(Vector2Int _p in vList){
+            vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(_p.x),MapCtl.offset_stg2tile_y(_p.y),0), null );
+        }
     }
     
     // ユニット削除
@@ -63,7 +86,7 @@ public class ViewMap : MonoBehaviour
     }
     
     //Posを中心とした半径radの領域
-    public List<Vector2Int> tileRing(Vector2Int Pos, int rad){
+    public List<Vector2Int> tileArea(Vector2Int Pos, int rad){
 		List<Vector2Int> query = new List<Vector2Int>();
 		query.Add(Pos); //自分の中心点をまず追加
 		
@@ -85,6 +108,21 @@ public class ViewMap : MonoBehaviour
 		//領域範囲外を除く
 		return query.Where(pos => pos.x > -1 && pos.x < StageCtl.TileLenX && pos.y > -1 && pos.y < StageCtl.TileLenY).ToList();
     }
+    
+    // 視界を開ける
+    public void openView(Vector2Int Pos){
+        if (tileMap[Pos.x, Pos.y].getType() == TileType.None){
+            TileObj.set(baseMap.tileMap[Pos.x, Pos.y].getType(), new Vector2Int(Pos.x, Pos.y));
+            tileList.Add(tileMap[Pos.x, Pos.y]);
+            
+        }
+    }
+    
+    // 視界を閉じる
+    public void closeView(Vector2Int Pos){
+        
+    }
+    
     
 
 }

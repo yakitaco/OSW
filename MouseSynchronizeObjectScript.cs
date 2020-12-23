@@ -41,7 +41,7 @@ public class MouseSynchronizeObjectScript : MonoBehaviour {
         TextObj.transform.position = Input.mousePosition;
         Vector3 screenToWorldPointPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = GridMap.GetComponent<Grid>().LocalToCell(screenToWorldPointPosition);
-        TextObj.GetComponent<Text>().text = "["+ GridMap.offset_tile2stg_x(cellPosition.x) +","+ GridMap.offset_tile2stg_y(cellPosition.y) +"]";
+        TextObj.GetComponent<Text>().text = "["+ MapCtl.offset_tile2stg_x(cellPosition.x) +","+ MapCtl.offset_tile2stg_y(cellPosition.y) +"]";
 	}
 	
     private void Tap(Vector3 point) {
@@ -50,7 +50,7 @@ public class MouseSynchronizeObjectScript : MonoBehaviour {
     //  陸地をチェック
     //Vector3 screenToWorldPointPosition = Camera.main.ScreenToWorldPoint(point);
     //Vector3Int cellPosition = GridMap.GetComponent<Grid>().LocalToCell(screenToWorldPointPosition);
-    //var ret = GridMap.landArea( new Vector2Int(GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y)));
+    //var ret = GridMap.landArea( new Vector2Int(MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y)));
     //		LineRenderer lr = Instantiate(renderer);
     //
 	//// 線の幅
@@ -59,7 +59,7 @@ public class MouseSynchronizeObjectScript : MonoBehaviour {
 	//lr.SetVertexCount(ret.Count);
 	//// 頂点を設定
 	//for (int i=0;i<ret.Count;i++){
-	//	lr.SetPosition(i, GridMap.GetComponent<Grid>().CellToLocal(new Vector3Int(GridMap.offset_stg2tile_x(ret[i].x), GridMap.offset_stg2tile_y(ret[i].y), 0)) + new Vector3(0f, 0f, -1f));
+	//	lr.SetPosition(i, GridMap.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(ret[i].x), MapCtl.offset_stg2tile_y(ret[i].y), 0)) + new Vector3(0f, 0f, -1f));
 	//}
     
         // タップ時の処理を記述
@@ -70,15 +70,15 @@ public class MouseSynchronizeObjectScript : MonoBehaviour {
         Debug.Log("["+ cellPosition.x +","+ cellPosition.y +"]");
         GridMap.ClickMap(cellPosition);
         
-        var ret = GridMap.chkOpenSea( new Vector2Int(GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y)) , 20,TileGroup.Sea);
+        var ret = GridMap.chkOpenSea( new Vector2Int(MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y)) , 20,TileGroup.Sea);
         Debug.Log("[chkOpenSea = "+ ret +"]");
     
         //if (count == 0) {
-        //	spos = new Vector2Int(GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        //	spos = new Vector2Int(MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         //    count=1;
         //    
         //} else {
-        //	epos = new Vector2Int(GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        //	epos = new Vector2Int(MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
 		//	ast.getRoute(spos, epos, GridMap.tileMap, 2, TapCb); //A-Sterによる経路取得
         //	count=0;
         //}
@@ -91,28 +91,28 @@ public class MouseSynchronizeObjectScript : MonoBehaviour {
         Vector3 screenToWorldPointPosition = Camera.main.ScreenToWorldPoint(point);
         //Grid grid = transform.parent.GetComponent<Grid>();
         Vector3Int cellPosition = GridMap.GetComponent<Grid>().LocalToCell(screenToWorldPointPosition);
-        switch (GridMap.tileMap[GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y)].getType()){
+        switch (GridMap.tileMap[MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y)].getType()){
         	case TileType.DeepSea:/* 深い海 */
-	        	GridMap.putTile(TileType.ShallowSea, GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+	        	GridMap.putTile(TileType.ShallowSea, MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         	case TileType.ShallowSea:/* 浅い海 */
-    	    	GridMap.putTile(TileType.SandyBeach, GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+    	    	GridMap.putTile(TileType.SandyBeach, MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         	case TileType.SandyBeach:/* 砂地 */
-        		GridMap.putTile(TileType.Meadow, GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        		GridMap.putTile(TileType.Meadow, MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         	case TileType.Meadow:/* 緑地 */
-        		GridMap.putTile(TileType.Forest, GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        		GridMap.putTile(TileType.Forest, MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         	case TileType.Forest:/* 森 */
-        		GridMap.putTile(TileType.Mountain, GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        		GridMap.putTile(TileType.Mountain, MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         	case TileType.Mountain:/* 山 */
-        		GridMap.putTile(TileType.OilField,GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        		GridMap.putTile(TileType.OilField,MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         		
         	default: /* 資源・その他 */
-        		GridMap.putTile(TileType.DeepSea,GridMap.offset_tile2stg_x(cellPosition.x), GridMap.offset_tile2stg_y(cellPosition.y));
+        		GridMap.putTile(TileType.DeepSea,MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
         		break;
         };
     }
@@ -128,7 +128,7 @@ public class MouseSynchronizeObjectScript : MonoBehaviour {
 		    lr.SetVertexCount(rt.Count);
 		    // 頂点を設定
 		    for (int i=0;i<rt.Count;i++){
-		    	lr.SetPosition(i, GridMap.GetComponent<Grid>().CellToLocal(new Vector3Int(GridMap.offset_stg2tile_x(rt[i].x), GridMap.offset_stg2tile_y(rt[i].y), 0)) + new Vector3(0f, 0f, -1f));
+		    	lr.SetPosition(i, GridMap.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(rt[i].x), MapCtl.offset_stg2tile_y(rt[i].y), 0)) + new Vector3(0f, 0f, -1f));
 		    }
     }
 	

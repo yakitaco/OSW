@@ -9,6 +9,7 @@ public class MapCtl : MonoBehaviour
 {
 	public Tilemap mainMap;
 	private astar ast;
+	static MapCtl instance;
 
     [SerializeField]
     public List<TileObj> tileList = new List<TileObj>();  //タイルの一次元リスト
@@ -22,6 +23,7 @@ public class MapCtl : MonoBehaviour
     {
     	TileObj.initTileTlt();
 		ast = gameObject.GetComponent<astar>();
+		instance = this;
     }
 
     // Update is called once per frame
@@ -224,43 +226,43 @@ public class MapCtl : MonoBehaviour
     }
     
 	//Xのステージ座標→タイル座標変換
-	public int offset_stg2tile_x(int stg_x){
+	public static int offset_stg2tile_x(int stg_x){
 		return stg_x - StageCtl.TileLenX/2;
 	}
 	
 	//Yのステージ座標→タイル座標変換
-	public int offset_stg2tile_y(int stg_y){
+	public static int offset_stg2tile_y(int stg_y){
 		return stg_y - StageCtl.TileLenY/2;
 	}
 	
-	public Vector2Int offset_stg2tile(Vector2Int stg_pos){
+	public static Vector2Int offset_stg2tile(Vector2Int stg_pos){
 		return new Vector2Int(stg_pos.x - StageCtl.TileLenX/2, stg_pos.y - StageCtl.TileLenY/2);
 	}
 	
 	//Xのタイル座標→ステージ座標変換
-	public int offset_tile2stg_x(int tile_x){
+	public static int offset_tile2stg_x(int tile_x){
 		return tile_x + StageCtl.TileLenX/2;
 	}
 	
 	//Yのタイル座標→ステージ座標変換
-	public int offset_tile2stg_y(int tile_y){
+	public static int offset_tile2stg_y(int tile_y){
 		return tile_y + StageCtl.TileLenY/2;
 	}
 	
 	//Yのタイル座標→ステージ座標変換
-	public Vector2Int offset_tile2stg(Vector2Int tile_pos){
+	public static Vector2Int offset_tile2stg(Vector2Int tile_pos){
 		return new Vector2Int(tile_pos.x + StageCtl.TileLenX/2, tile_pos.y + StageCtl.TileLenY/2);
 	}
 	
 	//Vector2座標→ステージ座標変換
-	public Vector2Int offset_vec2stg(Vector2 pos){
-		Vector3Int cellPosition = GetComponent<Grid>().LocalToCell(pos);
+	public static Vector2Int offset_vec2stg(Vector2 pos){
+		Vector3Int cellPosition = instance.GetComponent<Grid>().LocalToCell(pos);
 		return offset_tile2stg(new Vector2Int(cellPosition.x, cellPosition.y));
 	}
 	
-	public Vector2 offset_stg2vec(Vector2Int pos){
+	public static Vector2 offset_stg2vec(Vector2Int pos){
 		Vector2Int tPos = offset_stg2tile(pos);
-		Vector3 vPos = GetComponent<Grid>().CellToLocal(new Vector3Int(tPos.x, tPos.y, 0));
+		Vector3 vPos = instance.GetComponent<Grid>().CellToLocal(new Vector3Int(tPos.x, tPos.y, 0));
 		return new Vector2(vPos.x, vPos.y);
 	}
     

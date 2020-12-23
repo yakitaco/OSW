@@ -12,6 +12,8 @@ public class PlayerCtl
 	public int pteam;     //プレイヤーのチーム
 	public Color pColor;  //プレイヤーの色
 	public List<UnitObj> utltList;  //ユニットテンプレートのリスト
+	public ViewMap vMap;
+	
 	static int num = 0;
 	
 	//CPUコンポーネントの名前一覧
@@ -31,6 +33,7 @@ public class PlayerCtl
         	//指定した番号のCPUコンポーネントをロードする
 	        pObj.AddComponent(Type.GetType(cpulist[ptype]));
         }
+        //vMap = new ViewMap();
     }
 	
     public List<Vector2Int> getTshipPos(){
