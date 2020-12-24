@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 using UnityEngine;
 using System.Linq;
 using System;
@@ -8,7 +9,7 @@ public class StageCtl : MonoBehaviour
 {
 
 	public MapCtl map;
-	public ViewMap vmap;
+	public Tilemap vmap;
 	public Sprite[] unitImages;
 	
 	public LineRenderer renderer;
@@ -127,12 +128,14 @@ public class StageCtl : MonoBehaviour
     
 		//プレイヤー情報登録
 		players.Add(new PlayerCtl("テスト1", 1, 0, new Color(0.75f, 0.0f, 0.0f, 1.0f)));teamnum++;
+		players[0].vMap = new ViewMap(null, vmap);
 		//UnitList.Add(new List<UnitObj>());
 		//UcList[0].Add(new uCost());
 		;
 
 		
 		players.Add(new PlayerCtl("テスト2", 0, 1, new Color(0.0f, 0.0f, 0.75f, 1.0f)));teamnum++;
+		players[1].vMap = new ViewMap(null, null);
 		//UnitList.Add(new List<UnitObj>());
 		
 		uCost.initUcost(teamnum);
@@ -225,7 +228,6 @@ public class StageCtl : MonoBehaviour
 		
 		Debug.Log("["+ map.MapDist(new Vector2Int (10, 10), new Vector2Int (11, 10)));
 		
-		vmap.initTile();
     }
 
     // Update is called once per frame

@@ -289,7 +289,7 @@ public class UnitObj : MonoBehaviour {
     	newObj.GetComponent<SpriteRenderer>().color = _player.pColor;
 		newObj.chgWorkType(WorkType.Newing);
     	newObj.gameObject.name = "Obj_" + _player.pnum + "_" + _type.ToString();
-    	
+    	_player.vMap.moveAdd(_pos, 3);
         if (newObj.type != uType.Building){
         	StageCtl.UnitList[newObj.player.pnum].Insert(0, newObj);  //先頭
         } else {

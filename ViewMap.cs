@@ -19,6 +19,8 @@ public class ViewMap
     [SerializeField]
     public TileObj[,] tileMap;      //タイルの2次元配列
 
+    public int[,] visible;   // ユニットによる視界リスト(1以上で視界あり)
+
     // タイル追加
     static ViewMap()
     {
@@ -31,6 +33,21 @@ public class ViewMap
     {
         vMap  = _vMap;
         vMask = _vMask;
+
+    	//Tilemapのクリア
+		tileList = new List<TileObj>();
+		
+		visible = new int[StageCtl.TileLenX, StageCtl.TileLenY];
+		
+		//タイル要素定義
+		tileMap = new TileObj[StageCtl.TileLenX, StageCtl.TileLenY];
+		for(int x = 0 ; x < StageCtl.TileLenX ; x++) {
+			for(int y = 0 ; y < StageCtl.TileLenY ; y++) {
+                if (vMask != null){
+			        vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(x),MapCtl.offset_stg2tile_y(y),0), mask );
+			    }
+			}
+		}
     }
     
     
@@ -39,20 +56,6 @@ public class ViewMap
     void Update()
     {
         
-    }
-    
-    //Viewマップ初期化(最初にコールすること)
-    public void initTile()
-    {
-    	//Tilemapのクリア
-		tileList = new List<TileObj>();
-		//タイル要素定義
-		tileMap = new TileObj[StageCtl.TileLenX, StageCtl.TileLenY];
-		for(int x = 0 ; x < StageCtl.TileLenX ; x++) {
-			for(int y = 0 ; y < StageCtl.TileLenY ; y++) {
-			    vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(x),MapCtl.offset_stg2tile_y(y),0), black );
-			}
-		}
     }
     
     // ユニット移動(move = 移動量, fov = 視野[>0])
@@ -64,13 +67,22 @@ public class ViewMap
     public void moveAdd(Vector2Int pos, int fov){
         List<Vector2Int> vList = tileArea(pos, fov);
         foreach(Vector2Int _p in vList){
-            vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(_p.x),MapCtl.offset_stg2tile_y(_p.y),0), null );
+            visible[_p.x,_p.y]++;
+            if ((visible[_p.x,_p.y] > 0) && (vMask != null)){
+                vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(_p.x),MapCtl.offset_stg2tile_y(_p.y),0), null );
+            }
         }
     }
     
     // ユニット削除
     public void moveRemove(Vector2Int pos, int fov){
-        
+        List<Vector2Int> vList = tileArea(pos, fov);
+        foreach(Vector2Int _p in vList){
+            visible[_p.x,_p.y]--;
+            if ((visible[_p.x,_p.y] == 0) && (vMask != null)){
+                vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(_p.x),MapCtl.offset_stg2tile_y(_p.y),0), null );
+            }
+        }
     }
     
     Vector2Int [,] dirList = new Vector2Int[2,6] {{ new Vector2Int (+1,  0), new Vector2Int( 0, -1), new Vector2Int(-1, -1), 
@@ -92,8 +104,8 @@ public class ViewMap
 		
 		for (int i =0 ;i< rad ; i++){
 			// 一つ外側へ移動
-			Vector2Int Sp = neighbor(Pos, 4);
-			
+			Pos = neighbor(Pos, 4);
+			Vector2Int Sp = Pos;
 			// 移動した先をリング状に追加
 			for(int j = 0 ; j < 6 ; j++){
 				for(int k = 0 ; k < rad ; k++){
@@ -102,8 +114,6 @@ public class ViewMap
 				}
 			}
 		}
-		
-
 		
 		//領域範囲外を除く
 		return query.Where(pos => pos.x > -1 && pos.x < StageCtl.TileLenX && pos.y > -1 && pos.y < StageCtl.TileLenY).ToList();
