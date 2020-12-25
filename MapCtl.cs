@@ -170,7 +170,8 @@ public class MapCtl : MonoBehaviour
     	return ret;
     }
     
-    Vector2Int [,] dirList = new Vector2Int[2,6] {{ new Vector2Int (+1,  0), new Vector2Int( 0, -1), new Vector2Int(-1, -1), 
+    Vector2Int [,] dirList = new Vector2Int[2,6] {{
+     new Vector2Int (+1,  0), new Vector2Int( 0, -1), new Vector2Int(-1, -1), 
      new Vector2Int (-1,  0), new Vector2Int (-1, +1), new Vector2Int ( 0, +1)},
     {new Vector2Int (+1,  0), new Vector2Int (+1, -1), new Vector2Int ( 0, -1), 
      new Vector2Int (-1,  0), new Vector2Int ( 0, +1), new Vector2Int (+1, +1)}};

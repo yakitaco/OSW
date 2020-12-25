@@ -95,6 +95,7 @@ public class UnitObj : MonoBehaviour {
     public List<UnitObj> loadUnits = new List<UnitObj>();  /* 搭載ユニットリスト */
     
 	public String name;
+	public Vector2Int old_pos; /* ひとつ前の位置 */
     public Vector2Int pos; /* 今の位置 */
     [SerializeField]
     int lock_timer; /* 固定状態かをチェックするタイマー */
@@ -280,6 +281,7 @@ public class UnitObj : MonoBehaviour {
         
         newObj.name = _name;
         newObj.pos  = _pos;
+        newObj.old_pos  = _pos;
         newObj.hp   = newObj.hpMax;
     	newObj.fuel = newObj.fuelMax;
     	newObj.gameObject.SetActive(true); //表示
@@ -645,7 +647,10 @@ public class UnitObj : MonoBehaviour {
 				
 			Vector3Int cellPosition = map.GetComponent<Grid>().LocalToCell(transform.position);
 			pos = new Vector2Int(MapCtl.offset_tile2stg_x(cellPosition.x), MapCtl.offset_tile2stg_y(cellPosition.y));
-			
+			if ((pos.x != old_pos.y)||(pos.y != old_pos.y)){
+			    player.vMap.moveUnit(old_pos, pos, 4);
+			}
+			old_pos = pos;
 
 			
 			

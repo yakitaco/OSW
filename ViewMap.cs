@@ -60,6 +60,8 @@ public class ViewMap
     
     // ユニット移動(move = 移動量, fov = 視野[>0])
     public void moveUnit(Vector2Int before, Vector2Int after, int fov){
+        moveRemove(before, fov);
+        moveAdd(after, fov);
         
     }
     
@@ -80,12 +82,13 @@ public class ViewMap
         foreach(Vector2Int _p in vList){
             visible[_p.x,_p.y]--;
             if ((visible[_p.x,_p.y] == 0) && (vMask != null)){
-                vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(_p.x),MapCtl.offset_stg2tile_y(_p.y),0), null );
+                vMask.SetTile( new Vector3Int(MapCtl.offset_stg2tile_x(_p.x),MapCtl.offset_stg2tile_y(_p.y),0), mask );
             }
         }
     }
     
-    Vector2Int [,] dirList = new Vector2Int[2,6] {{ new Vector2Int (+1,  0), new Vector2Int( 0, -1), new Vector2Int(-1, -1), 
+    Vector2Int [,] dirList = new Vector2Int[2,6] {{
+     new Vector2Int (+1,  0), new Vector2Int ( 0, -1), new Vector2Int (-1, -1), 
      new Vector2Int (-1,  0), new Vector2Int (-1, +1), new Vector2Int ( 0, +1)},
     {new Vector2Int (+1,  0), new Vector2Int (+1, -1), new Vector2Int ( 0, -1), 
      new Vector2Int (-1,  0), new Vector2Int ( 0, +1), new Vector2Int (+1, +1)}};
