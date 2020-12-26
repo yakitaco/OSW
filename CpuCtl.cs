@@ -265,13 +265,13 @@ public class CpuCtl : MonoBehaviour
 	        	case Unit.Capital: /* 首都 */
 	        		if (units.works == WorkType.None){
 
-		        		//if (UnitList.Where( u => u.units == Unit.NavalPort ).ToList().Count < 1) {
-		        		//	//units.bldNavalPort();
-		        		//	units.doBuildUnit(Unit.NavalPort);
-		        		//} else if (UnitList.Where( u => u.units == Unit.OilWell ).ToList().Count < 5){
-		        		//	//units.bldOilWell();
-		        		//	units.doBuildUnit(Unit.OilWell);
-		        		//} else
+		        		if (UnitList.Where( u => u.units == Unit.NavalPort ).ToList().Count < 1) {
+		        			//units.bldNavalPort();
+		        			units.doBuildUnit(Unit.NavalPort);
+		        		} else if (UnitList.Where( u => u.units == Unit.OilWell ).ToList().Count < 5){
+		        			//units.bldOilWell();
+		        			units.doBuildUnit(Unit.OilWell);
+		        		} else
 		        		 if (UnitList.Where( u => u.units == Unit.Airfield ).ToList().Count < 1){
 		        			units.doBuildUnit(Unit.Airfield);
 		        		}

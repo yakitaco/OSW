@@ -111,7 +111,7 @@ public class ViewMap
 			Vector2Int Sp = Pos;
 			// 移動した先をリング状に追加
 			for(int j = 0 ; j < 6 ; j++){
-				for(int k = 0 ; k < rad ; k++){
+				for(int k = 0 ; k < i+1 ; k++){
 					query.Add(Sp);
 					Sp = neighbor(Sp, j);
 				}
