@@ -110,7 +110,9 @@ public class UnitObj : MonoBehaviour {
     public int hpMax = 100;
     public int hp = 100;
     public int fuelMax = 100;
+    public int fuelEfc = 100;  //燃費
     public int fuel = 100;
+    
     public int demic = 0;  //人口・乗員数
     public int demicMax = 100;  //人口・乗員数
     public int atkmin = 1; //攻撃範囲最小
@@ -202,7 +204,7 @@ public class UnitObj : MonoBehaviour {
         uObjTlt.Add(addObjTlt("001/A2_Fighter",  uType.Aircraft, Unit.Fighter,		100, 100, 100, 3.0f, 2.0f));		/* 戦闘機 */
         uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Attacker,		100, 100, 100, 10, 10));		/* 攻撃機 */
         uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Bomber,			100, 100, 100, 10, 10));		/* 爆撃機 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.LandFighter,	100, 100, 100, 10, 10));		/* 陸上戦闘機 */
+        uObjTlt.Add(addObjTlt("001/A2_Fighter" , uType.Aircraft, Unit.LandFighter,	100, 100, 100, 10, 10));		/* 陸上戦闘機 */
         uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.HeavyBomber,	100, 100, 100, 10, 10));		/* 大型爆撃機 */
         uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.CargoAircraft,	100, 100, 100, 10, 10));		/* 輸送機 */
         uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Urban,			100, 100, 100, 10, 10));		/* 都市 */
@@ -485,117 +487,29 @@ public class UnitObj : MonoBehaviour {
 		return true;
 	}
 	
-	// 油井(トラック)を作成[首都のみ]
-	public bool bldOilWell() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < uCost.fuel(player.pnum, Unit.OilWell))){
-			return false;
-		}
-		if (StageCtl.UnitList[player.pnum].Any(u => (u.pos == pos)&&((u.type == uType.Infantry)||(u.type == uType.Vehicle))) == true){
-			return false;
-		}
-		//Debug.Log (string.Format ("bldOilWell!!"));
-		chgWorkType(WorkType.Building);
-		fuel -= uCost.fuel(player.pnum, Unit.OilWell);
-		//
-		UnitObj newObj = Create("BBB", Unit.LargeTransport, pos, player);
-		newObj.transform.parent = transform;
-		UnitObj newObj2 = Create("BBB", Unit.OilWell, pos, player);
-		newObj.transform.parent.GetComponent<UnitObj>().loadUnits.Add(newObj2);
-		newObj2.transform.parent = newObj.transform;
-		newObj2.chgWorkType(WorkType.Loading);
-		return true;
+	// 親ユニットに帰れる (false 帰れない)
+	public bool canReturn() {
+	    if (transform.parent == null){
+	        return false;
+	    
+	    }
+	    return true;
 	}
 	
-	// 港(トラック)を作成[首都のみ]
-	public bool bldNavalPort() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < uCost.fuel(player.pnum, Unit.OilWell))){
-			return false;
-		}
-		if (StageCtl.UnitList[player.pnum].Any(u => (u.pos == pos)&&((u.type == uType.Infantry)||(u.type == uType.Vehicle))) == true){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= uCost.fuel(player.pnum, Unit.OilWell);
-		UnitObj newObj = Create("BBB", Unit.LargeTransport, pos, player);
-		newObj.transform.parent = transform;
-		UnitObj newObj2 = Create("BBB", Unit.NavalPort, pos, player);
-		newObj.transform.parent.GetComponent<UnitObj>().loadUnits.Add(newObj2);
-		newObj2.transform.parent = newObj.transform;
-		newObj2.chgWorkType(WorkType.Loading);
-		return true;
+	// 親ユニットに帰る
+	public bool doReturn() {
+	    if (transform.parent == null){
+	        return false;
+	    
+	    }
+	    if (type == uType.Aircraft){
+	        destList.Clear();
+	        destList.Add(transform.parent.GetComponent<UnitObj>().pos);
+	    }
+	    
+	    return true;
 	}
 	
-	//飛行場(トラック)を作成[首都のみ]
-	public bool bldAirfield() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < 100)){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= 100;
-		//
-		
-		return true;
-	}
-	
-	// 製油所(トラック)を作成[首都のみ]
-	public bool bldRefinery() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < 100)){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= 100;
-		//
-		
-		return true;
-	}
-	
-	// 工場(トラック)を作成[首都のみ]
-	public bool bldFactory() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < 100)){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= 100;
-		//
-		
-		return true;
-	}
-	
-	// 野営地(トラック)を作成[首都のみ]
-	public bool bldCamp() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < 100)){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= 100;
-		//
-		
-		return true;
-	}
-	
-	// 基地(トラック)を作成[首都のみ]
-	public bool bldBase() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < 100)){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= 100;
-		//
-		
-		return true;
-	}
-	
-	// 要塞(トラック)を作成[首都のみ]
-	public bool bldFortress() {
-		if ((units != Unit.Capital)||(works != WorkType.None)||(fuel < 100)){
-			return false;
-		}
-		chgWorkType(WorkType.Building);
-		fuel -= 100;
-		//
-		
-		return true;
-	}
 	
 	void Update () {
 	
@@ -653,6 +567,7 @@ public class UnitObj : MonoBehaviour {
 			old_pos = pos;
 
 			
+            fuel --; //燃料消費
 			
 		} else {
 			if (speed > 0.0f) {
@@ -683,7 +598,11 @@ public class UnitObj : MonoBehaviour {
 			material.SetFloat("_FillAmount", imgFill);
 			if (imgFill>1.0f){
 				if (type == uType.Aircraft){
+				    // 格納庫に格納
 					chgWorkType(WorkType.None);
+					if (transform.parent != null){
+						transform.parent.GetComponent<UnitObj>().chgWorkType(WorkType.None);
+					}
 				} else {
 					chgWorkType(WorkType.None);
 					if (transform.parent != null){
@@ -691,6 +610,7 @@ public class UnitObj : MonoBehaviour {
 						transform.parent = null;
 					}
 				}
+				
 			}
 		}
 		
@@ -807,7 +727,6 @@ public class UnitObj : MonoBehaviour {
 		if ((works == WorkType.PreMove)||(works == WorkType.Moving)){
 		
 			chgWorkType(WorkType.Moving);
-
 
 			if (rt?.Count > 0) {
 				var startPos = new Vector2(map.GetComponent<Grid>().CellToLocal(new Vector3Int(MapCtl.offset_stg2tile_x(rt[0].x),MapCtl.offset_stg2tile_y(rt[0].y), 0)).x,

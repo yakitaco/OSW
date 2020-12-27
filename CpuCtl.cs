@@ -254,12 +254,40 @@ public class CpuCtl : MonoBehaviour
 		        	}
 	        		break;
 	        		
+	        	case Unit.Surveillance: /* 偵察機 */
+	        		if (units.works == WorkType.None){
+	        			units.doMove(new Vector2Int (3, 3));
+	        			units.addMove(new Vector2Int (15, 15));
+	        			
+	        		}
+	        		
+	        		/* 帰還チェック */
+	        		chkReturn();
+	        		
+	        	break;
+	        	
+	        	case Unit.LandFighter: /* 陸上戦闘機 */
+	        		if (units.works == WorkType.None){
+	        			units.doMove(new Vector2Int (3, 3));
+	        			units.addMove(new Vector2Int (15, 15));
+	        			
+	        		}
+	        		
+	        		/* 帰還チェック */
+	        		chkReturn();
+	        		
+	        	break;
+	        	
 	        	case Unit.Fighter: /* 戦闘機 */
 	        		if (units.works == WorkType.None){
 	        			units.doMove(new Vector2Int (3, 3));
 	        			units.addMove(new Vector2Int (15, 15));
 	        			
 	        		}
+	        		
+	        		/* 帰還チェック */
+	        		chkReturn();
+	        		
 	        	break;
 	        
 	        	case Unit.Capital: /* 首都 */
@@ -284,9 +312,9 @@ public class CpuCtl : MonoBehaviour
 	        		
 	        	case Unit.NavalPort: /* 軍港 */
 	        		
-	        		Debug.Log("NavalPort!! "+ units.works);
+	        		//Debug.Log("NavalPort!! "+ units.works);
 	        		if (units.works == WorkType.None){
-		        		if (UnitList.Where( u => u.units == Unit.TransportShip ).ToList().Count < 5) {
+		        		if (UnitList.Where( u => u.units == Unit.TransportShip ).ToList().Count < 3) {
 		        			units.doBuildUnit(Unit.TransportShip);
 		        		} else if (UnitList.Where( u => u.units == Unit.LargeTanker ).ToList().Count < 5){
 		        			units.doBuildUnit(Unit.LargeTanker);
@@ -311,13 +339,20 @@ public class CpuCtl : MonoBehaviour
 	        		break;
 	        		
 	        	default: /* 資源・その他 */
-	        		units.bldOilWell();
+	        		//units.bldOilWell();
 	        		break;
 	        }
 	        
 	        //
         	
         }
+        
+        
+    }
+    
+    // 帰還チェック(帰還必要時は帰還処理含む)
+    void chkReturn(){
+        
         
         
     }

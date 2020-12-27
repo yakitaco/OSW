@@ -140,6 +140,7 @@ public class StageCtl : MonoBehaviour
 		
 		uCost.initUcost(teamnum);
 		Debug.Log("uCost["+ uCost.fuel(0, Unit.LargeTransport)+"]");
+		/* プレイヤー番号, ユニット種別, 燃料, 金, 時間, 生産者, 親 */
 		uCost.setUcost(0, Unit.OilWell, 10, 100, 100, Unit.Capital, Unit.LargeTransport);
 		uCost.setUcost(0, Unit.NavalPort, 10, 100, 100, Unit.Capital, Unit.LargeTransport);
 		uCost.setUcost(0, Unit.Airfield, 10, 100, 100, Unit.Capital, Unit.LargeTransport);
