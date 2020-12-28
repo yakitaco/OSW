@@ -110,8 +110,10 @@ public class UnitObj : MonoBehaviour {
     public int hpMax = 100;
     public int hp = 100;
     public int fuelMax = 100;
-    public int fuelEfc = 100;  //燃費
+    public float fuelEfc = 2.0f;  //燃費X(fuelEfc秒ごとに1減る)
+    public float fixEfc  = 0.5f;  //修理速度
     public int fuel = 100;
+    public float fuelCnt = 0;  //燃費計算用カウンタ
     
     public int demic = 0;  //人口・乗員数
     public int demicMax = 100;  //人口・乗員数
@@ -182,46 +184,47 @@ public class UnitObj : MonoBehaviour {
 	{
 		List<UnitObj> uObjTlt = new List<UnitObj>();
 		//ユニットテンプレートを追加
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.None,     Unit.None,			100, 100, 100, 10, 10));		/* なし   */
-        uObjTlt.Add(addObjTlt("001/I1_Infantry", uType.Infantry, Unit.Infantry,		100, 100, 100, 10, 10));		/* 歩兵隊 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Vehicle,  Unit.Tank,			100, 100, 100, 10, 10));		/* 戦車隊 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Vehicle,  Unit.Artillery,		100, 100, 100, 10, 10));		/* 砲兵隊 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Vehicle,  Unit.AntiAircraft,	100, 100, 100, 10, 10));		/* 高射砲隊 */
-        uObjTlt.Add(addObjTlt("001/V4_Track", uType.Vehicle,  Unit.Transport,		100, 100, 100, 10, 10));		/* 輸送車 */
-        uObjTlt.Add(addObjTlt("001/V4_Track", uType.Vehicle,  Unit.LargeTransport,	100, 100, 100, 1, 1));		/* 大型輸送車 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Battleship,		100, 100, 100, 10, 10));		/* 戦艦 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Cruiser,		100, 100, 100, 10, 10));		/* 巡洋艦 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Destroyer,		100, 100, 100, 10, 10));		/* 駆逐艦 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Carrier,		100, 100, 100, 10, 10));		/* 空母 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.LightCarrier,	100, 100, 100, 10, 10));		/* 軽空母 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Submarine, Unit.Submarine,		100, 100, 100, 10, 10));		/* 潜水艦 */
-        uObjTlt.Add(addObjTlt("001/M7_TransportShip", uType.Warship,  Unit.TransportShip,	100, 100, 100, 1, 1));		/* 輸送艦 */
-        uObjTlt.Add(addObjTlt("001/M7_TransportShip", uType.Warship,  Unit.LargeTransportShip,	 100, 100, 100, 1, 1));	/* 大型輸送艦 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Tanker,			100, 100, 100, 10, 10));		/* 油槽船 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.LargeTanker,	100, 100, 100, 10, 10));		/* 大型油槽船 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.RepairShip,		100, 100, 100, 10, 10));		/* 工作艦 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Surveillance,	100, 100, 100, 10, 10));		/* 偵察機 */
-        uObjTlt.Add(addObjTlt("001/A2_Fighter",  uType.Aircraft, Unit.Fighter,		100, 100, 100, 3.0f, 2.0f));		/* 戦闘機 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Attacker,		100, 100, 100, 10, 10));		/* 攻撃機 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Bomber,			100, 100, 100, 10, 10));		/* 爆撃機 */
-        uObjTlt.Add(addObjTlt("001/A2_Fighter" , uType.Aircraft, Unit.LandFighter,	100, 100, 100, 10, 10));		/* 陸上戦闘機 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.HeavyBomber,	100, 100, 100, 10, 10));		/* 大型爆撃機 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.CargoAircraft,	100, 100, 100, 10, 10));		/* 輸送機 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Urban,			100, 100, 100, 10, 10));		/* 都市 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Capital,		100, 100, 100, 0, 0));		/* 首都 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Factory,		100, 100, 100, 0, 0));		/* 工場 */
-        uObjTlt.Add(addObjTlt("001/B4_OilWell" , uType.Building, Unit.OilWell,		100, 100, 100, 0, 0));		/* 油井 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Refinery,		100, 100, 100, 0, 0));		/* 製油所 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Airfield,		100, 100, 100, 0, 0));		/* 飛行場 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.NavalPort,		100, 100, 100, 0, 0));		/* 軍港 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Camp,			100, 100, 100, 0, 0));		/* 野営地 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Base,			100, 100, 100, 0, 0));		/* 基地 */
-        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Fortress,		100, 100, 100, 0, 0));		/* 要塞 */
+		//_image, _type, _units, _cost, _hpMax, int _fuelMax, _fuelEfc, float _speedMax, float _yawMax
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.None,     Unit.None,						100, 100, 100, 2, 10, 10));		/* なし   */
+        uObjTlt.Add(addObjTlt("001/I1_Infantry", uType.Infantry, Unit.Infantry,					100, 100, 100, 2, 10, 10));		/* 歩兵隊 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Vehicle,  Unit.Tank,						100, 100, 100, 2, 10, 10));		/* 戦車隊 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Vehicle,  Unit.Artillery,				100, 100, 100, 2, 10, 10));		/* 砲兵隊 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Vehicle,  Unit.AntiAircraft,				100, 100, 100, 2, 10, 10));		/* 高射砲隊 */
+        uObjTlt.Add(addObjTlt("001/V4_Track", uType.Vehicle,  Unit.Transport,					100, 100, 100, 2, 10, 10));		/* 輸送車 */
+        uObjTlt.Add(addObjTlt("001/V4_Track", uType.Vehicle,  Unit.LargeTransport,				100, 100, 100, 2, 1, 1));		/* 大型輸送車 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Battleship,				100, 100, 100, 2, 10, 10));		/* 戦艦 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Cruiser,					100, 100, 100, 2, 10, 10));		/* 巡洋艦 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Destroyer,				100, 100, 100, 2, 10, 10));		/* 駆逐艦 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Carrier,					100, 100, 100, 2, 10, 10));		/* 空母 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.LightCarrier,				100, 100, 100, 2, 10, 10));		/* 軽空母 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Submarine, Unit.Submarine,				100, 100, 100, 2, 10, 10));		/* 潜水艦 */
+        uObjTlt.Add(addObjTlt("001/M7_TransportShip", uType.Warship,  Unit.TransportShip,		100, 100, 100, 2, 1, 1));		/* 輸送艦 */
+        uObjTlt.Add(addObjTlt("001/M7_TransportShip", uType.Warship,  Unit.LargeTransportShip,	100, 100, 100, 2, 1, 1));		/* 大型輸送艦 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.Tanker,					100, 100, 100, 2, 10, 10));		/* 油槽船 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.LargeTanker,				100, 100, 100, 2, 10, 10));		/* 大型油槽船 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Warship,  Unit.RepairShip,				100, 100, 100, 2, 10, 10));		/* 工作艦 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Surveillance,				100, 100, 100, 3, 3.5f, 2.5f));		/* 偵察機 */
+        uObjTlt.Add(addObjTlt("001/A2_Fighter",  uType.Aircraft, Unit.Fighter,					100, 100, 100, 2, 3.0f, 2.0f));	/* 戦闘機 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Attacker,					100, 100, 100, 2, 10, 10));		/* 攻撃機 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.Bomber,					100, 100, 100, 2, 10, 10));		/* 爆撃機 */
+        uObjTlt.Add(addObjTlt("001/A2_Fighter" , uType.Aircraft, Unit.LandFighter,				100, 100, 100, 2, 2.0f, 1.5f));		/* 陸上戦闘機 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.HeavyBomber,				100, 100, 100, 1, 10, 10));		/* 大型爆撃機 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Aircraft, Unit.CargoAircraft,			100, 100, 100, 3, 10, 10));		/* 輸送機 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Urban,					100, 100, 100, 2, 10, 10));		/* 都市 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Capital,					100, 100, 100, 2, 0, 0));		/* 首都 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Factory,					100, 100, 100, 2, 0, 0));		/* 工場 */
+        uObjTlt.Add(addObjTlt("001/B4_OilWell" , uType.Building, Unit.OilWell,					100, 100, 100, 2, 0, 0));		/* 油井 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Refinery,					100, 100, 100, 2, 0, 0));		/* 製油所 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Airfield,					100, 100, 100, 2, 0, 0));		/* 飛行場 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.NavalPort,				100, 100, 100, 2, 0, 0));		/* 軍港 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Camp,						100, 100, 100, 2, 0, 0));		/* 野営地 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Base,						100, 100, 100, 2, 0, 0));		/* 基地 */
+        uObjTlt.Add(addObjTlt("001/B2_Refinery", uType.Building, Unit.Fortress,					100, 100, 100, 2, 0, 0));		/* 要塞 */
         return uObjTlt;
 	}
     
     //ユニットオブジェクトのテンプレート作成
-    static UnitObj addObjTlt(String _image ,uType _type, Unit _units, int _cost, int _hpMax, int _fuelMax, float _speedMax, float _yawMax){
+    static UnitObj addObjTlt(String _image ,uType _type, Unit _units, int _cost, int _hpMax, int _fuelMax, int _fuelEfc, float _speedMax, float _yawMax){
     	UnitObj newObj = Instantiate(instance);
     	newObj.unitImage = newObj.transform.GetComponent<SpriteRenderer>(); //newObj.transform.Find("Texture").GetComponent<SpriteRenderer>()
     	newObj.unitImage.sprite = Resources.Load<Sprite>("UnitImg/" + _image);
@@ -229,6 +232,7 @@ public class UnitObj : MonoBehaviour {
         newObj.type = _type;
         newObj.hpMax = _hpMax;
     	newObj.fuelMax = _fuelMax;
+    	newObj.fuelEfc = _fuelEfc;
     	newObj.speedMax = _speedMax;
     	newObj.yawMax = _yawMax;
     	newObj.yawrate = _yawMax;
@@ -316,7 +320,8 @@ public class UnitObj : MonoBehaviour {
 				case WorkType.Moving:      /* 移動中 */
 				case WorkType.Attacking:   /* 攻撃中 */
 				case WorkType.Loading:     /* 搭乗中 */
-				case WorkType.Unloading:    /* 降載中 */
+				case WorkType.Unloading:   /* 降載中 */
+				case WorkType.Returning:   /* 帰還中 */
 					var rb = this.GetComponent<Rigidbody2D>();
 					rb.constraints = RigidbodyConstraints2D.None;
 
@@ -504,9 +509,11 @@ public class UnitObj : MonoBehaviour {
 	    }
 	    if (type == uType.Aircraft){
 	        destList.Clear();
-	        destList.Add(transform.parent.GetComponent<UnitObj>().pos);
+	        //destList.Add(transform.parent.GetComponent<UnitObj>().pos);
+	        var p = transform.parent.GetComponent<UnitObj>().pos;
+	        destList.Add(new Vector2Int(MapCtl.offset_stg2tile_x(p.x),MapCtl.offset_stg2tile_y(p.y)));
 	    }
-	    
+	    chgWorkType(WorkType.Returning);
 	    return true;
 	}
 	
@@ -521,9 +528,7 @@ public class UnitObj : MonoBehaviour {
 		//	Debug.Log(Camera.main.ScreenToWorldPoint(mousePos));
 		//} 
 		
-		if ((destList.Count > 0)||(type == uType.Aircraft)){
-			if (destList.Count == 0) destList.Add(new Vector2(0,0));
-			
+		if (destList.Count > 0){//移動中
 			Vector2 dif = destList[0] - (Vector2)transform.position;
 			
 			// ラジアン
@@ -556,6 +561,9 @@ public class UnitObj : MonoBehaviour {
 			if (Vector2.Distance(destList[0], (Vector2)transform.position) < 0.1f) {
 				if ((type != uType.Aircraft)||(destList.Count()>1)){
 					destList.Remove(destList[0]);
+				} else if (works == WorkType.Returning) { // 空港・空母へ帰還
+					destList.Clear();
+					chgWorkType(WorkType.Repairing);
 				}
 			}
 				
@@ -566,8 +574,11 @@ public class UnitObj : MonoBehaviour {
 			}
 			old_pos = pos;
 
-			
-            fuel --; //燃料消費
+			fuelCnt += Time.deltaTime;
+			if (fuelCnt > fuelEfc){
+                fuel --; //燃料消費
+                fuelCnt -= fuelEfc;
+            }
 			
 		} else {
 			if (speed > 0.0f) {
@@ -590,6 +601,22 @@ public class UnitObj : MonoBehaviour {
 			} else if  (works == WorkType.Loading) {
 				gameObject.SetActive(false); //非表示
 				transform.parent.GetComponent<UnitObj>().loadUnits.Add(this);
+			// 修理・補給中
+			} else if  (works == WorkType.Repairing) {
+				if ((fuel < fuelMax)||(hp < hpMax)) {
+					fuelCnt += Time.deltaTime;
+					if (fuelCnt > fixEfc){
+					
+		                if (hp < hpMax) {
+		                    hp ++; //修理(優先)
+						} else if (fuel < fuelMax) {
+			                fuel ++; //燃料補給
+		                }
+		                fuelCnt -= fixEfc;
+		            }
+	            } else { //修理・補給完了
+	            	chgWorkType(WorkType.None);
+	            }
 			}
 		}
 		

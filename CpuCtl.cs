@@ -262,7 +262,7 @@ public class CpuCtl : MonoBehaviour
 	        		}
 	        		
 	        		/* 帰還チェック */
-	        		chkReturn();
+	        		chkReturn(units);
 	        		
 	        	break;
 	        	
@@ -274,7 +274,7 @@ public class CpuCtl : MonoBehaviour
 	        		}
 	        		
 	        		/* 帰還チェック */
-	        		chkReturn();
+	        		chkReturn(units);
 	        		
 	        	break;
 	        	
@@ -286,20 +286,20 @@ public class CpuCtl : MonoBehaviour
 	        		}
 	        		
 	        		/* 帰還チェック */
-	        		chkReturn();
+	        		chkReturn(units);
 	        		
 	        	break;
 	        
 	        	case Unit.Capital: /* 首都 */
 	        		if (units.works == WorkType.None){
 
-		        		if (UnitList.Where( u => u.units == Unit.NavalPort ).ToList().Count < 1) {
-		        			//units.bldNavalPort();
-		        			units.doBuildUnit(Unit.NavalPort);
-		        		} else if (UnitList.Where( u => u.units == Unit.OilWell ).ToList().Count < 5){
-		        			//units.bldOilWell();
-		        			units.doBuildUnit(Unit.OilWell);
-		        		} else
+		        		//if (UnitList.Where( u => u.units == Unit.NavalPort ).ToList().Count < 1) {
+		        		//	//units.bldNavalPort();
+		        		//	units.doBuildUnit(Unit.NavalPort);
+		        		//} else if (UnitList.Where( u => u.units == Unit.OilWell ).ToList().Count < 5){
+		        		//	//units.bldOilWell();
+		        		//	units.doBuildUnit(Unit.OilWell);
+		        		//} else
 		        		 if (UnitList.Where( u => u.units == Unit.Airfield ).ToList().Count < 1){
 		        			units.doBuildUnit(Unit.Airfield);
 		        		}
@@ -351,9 +351,12 @@ public class CpuCtl : MonoBehaviour
     }
     
     // 帰還チェック(帰還必要時は帰還処理含む)
-    void chkReturn(){
+    void chkReturn(UnitObj units){
         
-        
+        if (((float)units.fuel / (float)units.fuelMax < 0.25f )
+            &&((units.works != WorkType.Returning)&&(units.works != WorkType.Repairing))){
+            units.doReturn();
+        }
         
     }
     
